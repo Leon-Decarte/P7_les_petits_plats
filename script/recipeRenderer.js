@@ -21,13 +21,16 @@ export class RecipeRenderer {
             recipeElement.innerHTML = `
                 <img src="./assets/photos/${recipe.image}">
                 <div class="card__information">
-                <h2 class="recipe-title">${recipe.name}</h2>
-                <p class="recipe-servings">Servings: ${recipe.servings}</p>
-                <p class="recipe-time">Time: ${recipe.time} minutes</p>
-                <ul class="recipe-ingredients">
-                    ${recipe.ingredients.map(ingredient => `<li class="ingredient">${ingredient.quantity || ''} ${ingredient.unit || ''} ${ingredient.ingredient}</li>`).join('')}
-                </ul>
-                <p class="recipe-description">${recipe.description}</p></div>
+                    <h2 class="recipe-title">${recipe.name}</h2>
+                    <p class="recipe-description-title">Recette</p>
+                    <p class="recipe-description">${recipe.description}</p>
+                    <p class="recipe-description-ingredients">Ingrédients</p>
+                    <ul class="recipe-ingredients">
+                        ${recipe.ingredients.map(ingredient => `<li class="ingredient">${ingredient.quantity || ''} ${ingredient.unit || ''} ${ingredient.ingredient}</li>`).join('')}
+                    </ul>
+                
+                
+                </div>
             `;
             this.container.appendChild(recipeElement);
         });
