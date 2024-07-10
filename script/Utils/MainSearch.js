@@ -1,4 +1,4 @@
-export class RecipeFilter {
+export class MainSearch {
     constructor(app) {
         this.app = app;
     }
@@ -33,6 +33,7 @@ export class RecipeFilter {
             recipe.name.toLowerCase().includes(searchText) ||
             recipe.description.toLowerCase().includes(searchText)
         );
+        this.app.createCombo();
         this.app.displayRecipes();
     }
 }

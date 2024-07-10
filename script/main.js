@@ -1,5 +1,5 @@
 import { DataFetcher } from './Api/dataFetcher.js';
-import { RecipeRenderer } from './Templates/recipeRenderer.js';
+import { RecipeRenderer } from './Templates/RecipeRenderer.js';
 import { MainSearch } from './Utils/MainSearch.js';
 
 export class App {
