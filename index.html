@@ -46,11 +46,16 @@
                             <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
                         </button>
                     </div>
-                    <ul class="dropdown-menu dropdown-menu-ingredient" display="none">
-                        <!-- Liste d'ingrédients sera ajoutée ici -->
-                        <!-- Liste d'ingrédients sera ajoutée ici -->
-                        <li><input type="text" id="searchInput"><i class="bi bi-search"></i></li>
-                    </ul>
+                    <div class="dropdown-menu-container" id="ingredients_dropdown_container">
+                        <div>
+                            <input type="text" id="ingredients_searchInput"><i class="bi bi-search"></i>
+                            
+                        </div>
+                        <div>
+                            <ul id="ingredients_list_selected"></ul>
+                            <ul id="ingredients_list_selectable"></ul>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="dropdown">

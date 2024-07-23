@@ -14,7 +14,7 @@ export class RecipeRenderer {
         // Clear existing content
         this.container.innerHTML = '';
 
-        data.forEach(recipe => {
+        data.forEach(recipe => {    
             const recipeElement = document.createElement('div');
             recipeElement.className = 'card';  // Add class to the recipe container
 

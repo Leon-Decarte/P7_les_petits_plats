@@ -1,6 +1,8 @@
 import { DataFetcher } from './Api/dataFetcher.js';
 import { RecipeRenderer } from './Templates/RecipeRenderer.js';
 import { MainSearch } from './Utils/MainSearch.js';
+import { CreateCombo } from './Templates/CreateCombo.js';
+
 
 export class App {
     constructor() {
@@ -16,7 +18,7 @@ export class App {
         const recipeFilter = new MainSearch(this);
         recipeFilter.init();
 
-        this.createCombo();
+        this.createAllCombos();
     }
 
     async getAllRecipes() {
@@ -24,15 +26,19 @@ export class App {
         this.allRecipes = await dataFetcher.fetchData();
     }
 
-    createCombo() {
-        // class de création des combos box
-        if (this.haveFilter) {
-            //instance de CreateCombos avec this.filteredRecipes
-        } else {
-//instance de CreateCombos avec this.allRecipes
-        }
-    }
+    createAllCombos() {
+            new CreateCombo('ingredient', this);
+            new CreateCombo('appliance', this);
+            new CreateCombo('utensils', this);
 
+
+            // new CreateCombo('appliance_dropdown_container', this);
+            // new CreateCombo('utensils_dropdown_container', this);
+
+            // new CreateCombo('ingredients_dropdown_container', this);
+            //  new CreateCombo('appliance_dropdown_container', this);
+            // new CreateCombo('utensils_dropdown_container', this);
+    }
     displayRecipes() {
         const recipeRenderer = new RecipeRenderer('.recipe-container');
 

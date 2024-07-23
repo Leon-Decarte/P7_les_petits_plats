@@ -8,26 +8,35 @@ export class DataFetcher {
             const response = await fetch('data/recipes.json');
             this.recipesData = await response.json();
             console.log('Recipes data fetched successfully:', this.recipesData);
-
-            // Extract and log specific details
-            this.logRecipeDetails(this.recipesData);
-            return this.recipesData;
+        
         } catch (error) {
             console.error('Error fetching the recipes:', error);
         }
         return this.recipesData;
     }
-
-    logRecipeDetails(recipes) {
+    
+    extractIngredients(recipes) {
+        const ingredientsSet = new Set();
         recipes.forEach(recipe => {
-            const appliances = recipe.appliance;
-            const utensils = recipe.ustensils;
-            const ingredients = recipe.ingredients.map(ing => ing.ingredient);
-
-            console.log(`Recipe: ${recipe.name}`);
-            console.log('Appliance:', appliances);
-            console.log('Utensils:', utensils);
-            console.log('Ingredients:', ingredients);
+            recipe.ingredients.forEach(ing => ingredientsSet.add(ing.ingredient.toLowerCase()));
+            console.log(ingredientsSet);
         });
+        return Array.from(ingredientsSet);
+    }
+    
+    extractAppliance(recipes) {
+        const applianceSet = new Set();
+        recipes.forEach(recipe => {
+            recipe.appliance.forEach(appliance => applianceSet.add(appliance.toLowerCase()));
+        });
+        return Array.from(applianceSet);
+    }
+    
+    extractUstensils(recipes) {
+        const ustensilsSet = new Set();
+        recipes.forEach(recipe => {
+            recipe.ustensils.forEach(ust => ustensilsSet.add(ust.toLowerCase()));
+        });
+        return Array.from(ustensilsSet);
     }
 }
