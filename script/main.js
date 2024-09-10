@@ -29,7 +29,7 @@ export class App {
     createAllCombos() {
             new CreateCombo('ingredient', this);
             new CreateCombo('appliance', this);
-            new CreateCombo('utensils', this);
+            new CreateCombo('ustensils', this);
 
 
             // new CreateCombo('appliance_dropdown_container', this);

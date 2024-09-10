@@ -1,12 +1,17 @@
+// put a comment on evry functionality and how it works and what it does and how do they interact with the other classes
+
 export class RecipeRenderer {
     constructor(containerSelector) {
+        // get the container element
         this.container = document.querySelector(containerSelector);
+        // if the container element is not found, return
         if (!this.container) {
             console.error('The container element was not found.');
         }
     }
 
     renderRecipes(data) {
+        // if the container element is not found, return
         if (!this.container) {
             return;
         }
@@ -15,7 +20,9 @@ export class RecipeRenderer {
         this.container.innerHTML = '';
 
         data.forEach(recipe => {    
+            // create a recipe element
             const recipeElement = document.createElement('div');
+            // add a class to the recipe element
             recipeElement.className = 'card';  // Add class to the recipe container
 
             recipeElement.innerHTML = `

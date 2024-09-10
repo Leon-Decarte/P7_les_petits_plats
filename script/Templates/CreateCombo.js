@@ -19,19 +19,24 @@ export class CreateCombo {
             case 'ingredient':
                 datas  = await this.dataFetcher.extractIngredients(recipes);
                 containerId='ingredients_dropdown_container';
-                
+                console.log(datas)
                 break;
             case 'appliance':
                 datas  = await this.dataFetcher.extractAppliances(recipes);
                 containerId='appliance_dropdown_container';
+                console.log(datas)
+
                 break;
-            case 'utensils':
+            case 'ustensil':
                 datas  = await this.dataFetcher.extractUstensils(recipes);
-                containerId='utensils_dropdown_container';
+                containerId='ustensil_dropdown_container';
+                console.log(datas)
+
                 break;
         }
         this.container = document.getElementById(containerId);
         console.log(this.who)
+        
         console.log('datas:', datas);  // Log the received data
         this.populateDropdown();
         console.log(this.datas);
