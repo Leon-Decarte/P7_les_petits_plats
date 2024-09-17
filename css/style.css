@@ -520,5 +520,70 @@ et de le remettre dans la liste selectable
 ne pas oublier de filtrer les recettes avec ce terme selectionné*/
 
 
+/* General Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.dropdown-menu-container {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%; /* Position below the button */
+    left: 0;
+    width: 100%;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    z-index: 1000; /* Make sure dropdown appears above other content */
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 4px;
+}
+
+.dropdown-menu-container.active {
+    display: block; /* Show dropdown when active */
+}
+
+.dropdown-menu-container.active .dropdown-menu {
+    display: block; /* Show dropdown items when active */
+}
+
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.selected-items-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
 
 

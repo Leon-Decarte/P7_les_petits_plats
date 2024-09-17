@@ -61,6 +61,7 @@ export class DataFetcher {
         recipes.forEach(recipe => {
             recipe.ustensils.forEach(ust => ustensilsSet.add(ust.toLowerCase()));
         });
+        console.log('Ustensils Set:', Array.from(ustensilsSet));
         return Array.from(ustensilsSet);
     }
 }

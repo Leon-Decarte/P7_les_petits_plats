@@ -49,9 +49,10 @@ export class MainSearch {
             recipe.name.toLowerCase().includes(searchText) ||
             recipe.description.toLowerCase().includes(searchText)
         );
-        // create the combo 
-        this.app.createCombo();
-        // display the recipes that match the search text
         this.app.displayRecipes();
+        // create the combo 
+        this.app.createAllCombos();
+        
+        // display the recipes that match the search text
     }
 }

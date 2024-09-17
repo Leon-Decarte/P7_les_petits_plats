@@ -35,8 +35,7 @@ export class RecipeRenderer {
                     <ul class="recipe-ingredients">
                         ${recipe.ingredients.map(ingredient => `<li class="ingredient">${ingredient.quantity || ''} ${ingredient.unit || ''} ${ingredient.ingredient}</li>`).join('')}
                     </ul>
-                
-                
+
                 </div>
             `;
             this.container.appendChild(recipeElement);

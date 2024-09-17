@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <title>Petits Plats</title>
 </head>
@@ -18,81 +17,61 @@
         <h1 class="title">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h1>
         <div class="searchbar-container">
             <input type="text" id="searchbar" class="searchbar" placeholder="Rechercher une recette, un ingrédient, ..">
-
             <button>
-                <img src="./assets/icons/search.svg" alt="bouton permetant de lancer la recherche">
+                <img src="./assets/icons/search.svg" alt="bouton permettant de lancer la recherche">
             </button>
         </div>
     </header>
 
-    <!--<main class="from-html">
-        <section class="container">
-            <div class="filters-container"></div>
-            <span class="total-recipes"></span>
-        </section>
-        <div class="tags-container"></div>
-        <section class="cards-container"></section>
-    </main>-->
-
-    <!-- Main -->
     <main>
         <div class="dropdown-container">
-            <div class="dropdown-button">
-                <div class="dropdown">
-                    <div id="ingredientsDropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Ingrédients
-                            <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu-container" id="ingredients_dropdown_container">
-                        <div>
-                            <input type="text" id="ingredients_searchInput"><i class="bi bi-search"></i>
-                            
-                        </div>
-                        <div>
-                            <ul id="ingredients_list_selected"></ul>
-                            <ul id="ingredients_list_selectable"></ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        appliance
-                        <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
-
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-appliance">
-                        <!-- Liste d'appareils sera ajoutée ici -->
-                        <li><input type="text"><i class="bi bi-search"></i></li>
-                    </ul>
-                </div>
-
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Ustensiles
-                        <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
-
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-utensil">
-                        <!-- Liste d'ustensiles sera ajoutée ici -->
-                        <li><input type="text"><i class="bi bi-search"></i></li>
-                    </ul>
+            <!-- Ingredients Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="ingredientsDropdown">
+                    Ingrédients
+                    <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
+                </button>
+                <div class="dropdown-menu-container" id="ingredients_dropdown_container">
+                    <input type="text" id="ingredients_searchInput" placeholder="Rechercher un ingrédient...">
+                    <ul id="ingredients_list_selectable" class="dropdown-menu"></ul>
+                    <ul id="ingredients_list_selected" class="selected-items-container"></ul>
                 </div>
             </div>
 
-            <p>1500 recettes</p>
+            <!-- Appliances Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="appliancesDropdown">
+                    Appliances
+                    <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
+                </button>
+                <div class="dropdown-menu-container" id="appliance_dropdown_container">
+                    <input type="text" id="appliances_searchInput" placeholder="Rechercher un appareil...">
+                    <ul id="appliances_list_selectable" class="dropdown-menu"></ul>
+                    <ul id="appliances_list_selected" class="selected-items-container"></ul>
+                </div>
+            </div>
+
+            <!-- Ustensils Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="ustensilsDropdown">
+                    Ustensiles
+                    <span><img src="./assets/icons/flech.svg" alt="une fleche pour afficher le dropdown"></span>
+                </button>
+                <div class="dropdown-menu-container" id="utensils_dropdown_container">
+                    <input type="text" id="ustensils_searchInput" placeholder="Rechercher un ustensile...">
+                    <ul id="ustensils_list_selectable" class="dropdown-menu"></ul>
+                    <ul id="ustensils_list_selected" class="selected-items-container"></ul>
+                </div>
+            </div>
         </div>
+
+        <p>1500 recettes</p>
         <div class="parent-div"></div>
         <div class="recipes-cards"></div>
         <div class="search-feedback"></div>
         <div class="recipe-container"></div>
-
     </main>
+
     <script src="./script/main.js" type="module"></script>
 </body>
 
