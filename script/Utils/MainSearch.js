@@ -50,8 +50,6 @@ export class MainSearch {
             recipe.description.toLowerCase().includes(searchText)
         );
         this.app.displayRecipes();
-        // create the combo 
-        this.app.createAllCombos();
         
         // display the recipes that match the search text
     }
