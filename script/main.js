@@ -10,7 +10,7 @@ export class App {
         this.haveFilter = false;  // Boolean to check if filters are applied
         this.ingredients = [];  // List of deduplicated ingredients
         this.appliance = [];  // List of appliances
-        this.ustensiles = [];  // List of utensils
+        this.ustensils = [];  // List of utensils
         this.selectedIngredients = [];  // Selected ingredients for filtering
         this.selectedAppliances = [];  // Selected appliances for filtering
         this.selectedUstensiles = [];  // Selected utensils for filtering
@@ -19,10 +19,10 @@ export class App {
     // Initializes the app by fetching data, setting up filters, and displaying recipes
     async init() {
         await this.getAllRecipes();  // Wait for recipes to be fetched
-        this.getIngredients(this.allRecipes);  // Extract ingredients from recipes
-        this.getAppliance(this.allRecipes);  // Extract appliances from recipes
-        this.getUstensiles(this.allRecipes);  // Extract utensils from recipes
-        this.populateDropdowns();  // Populate dropdowns with the fetched data
+        this.updateIngredients(this.allRecipes);  // Extract ingredients from recipes
+        this.updateAppliance(this.allRecipes);  // Extract appliances from recipes
+        this.updateUstensiles(this.allRecipes);  // Extract utensils from recipes
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Populate dropdowns with the fetched data
         this.setupSearchInputs();  // Set up the search functionality for dropdowns
         this.displayRecipes();  // Display all recipes initially
 
@@ -41,52 +41,71 @@ export class App {
         }
     }
 
-    // Extracts unique appliances from the fetched recipes
-    getAppliance(recepies) {
-        let appliance = [];
-        recepies.forEach(r => {
-            appliance.push(r.appliance);  // Collect appliances from each recipe
-        });
-        this.appliance = [...new Set(appliance)];  // Remove duplicates by creating a Set
-        this.populateDropdowns();  // Update dropdowns with the extracted appliances
-        console.log("Appliance", this.appliance);
+
+    // Extracts unique appliances from the fetched recipes or update appliance with filters
+    updateAppliance(recepies) {
+        let appliances = [];
+
+        // Collect appliance from each recipe and convert to lowercase
+        recepies.forEach(recepie => {
+            appliances.push(recepie.appliance.toLowerCase())
+        })
+
+        this.appliance = [...new Set(appliances)];  // Remove duplicates by creating a Set
+        if (this.selectedAppliances.length) {
+            this.appliance = this.appliance.filter(item => !this.selectedAppliances.includes(item))
+        }
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
+        console.log("appliance", this.appliance);
     }
 
-    // Extracts unique utensils from the fetched recipes
-    getUstensiles(recepies) {
+    // Extracts unique ustensils from the fetched recipes or update ustensils with filters
+    updateUstensiles(recepies) {
         let ustensiles = [];
-        recepies.forEach(r => {
-            r.ustensils.forEach(u => {
-                ustensiles.push(u);  // Collect utensils from each recipe
-            });
-        });
-        this.ustensiles = [...new Set(ustensiles)];  // Remove duplicates by creating a Set
-        this.populateDropdowns();  // Update dropdowns with the extracted utensils
-        console.log("Ustensiles", this.ustensiles);
+
+        // Collect ustensils from each recipe and convert to lowercase
+        recepies.forEach(recepie => recepie.ustensils.forEach(ustensile => {
+            ustensiles.push(ustensile.toLowerCase());
+        }))
+
+        this.ustensils = [...new Set(ustensiles)];  // Remove duplicates by creating a Set
+        if (this.selectedUstensiles.length) {
+            this.ustensils = this.ustensils.filter(item => !this.selectedUstensiles.includes(item))
+        }
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
+        console.log("ustensiles", this.ustensils);
     }
 
-    // Extracts unique ingredients from the fetched recipes
-    getIngredients(recepies) {
+    // Extracts unique ingredients from the fetched recipes or update ingredients with filters
+    updateIngredients(recepies) {
         let ingredients = [];
-        recepies.forEach(r => {
-            r.ingredients.forEach(i => {
-                ingredients.push(i.ingredient.toLowerCase());  // Collect ingredients from each recipe and convert to lowercase
-            });
-        });
+
+        // Collect ingredients from each recipe and convert to lowercase
+        recepies.forEach(recepie => recepie.ingredients.forEach(ingredient => {
+            ingredients.push(ingredient.ingredient.toLowerCase());
+        }))
+
+        /*ingredientList.forEach(i => {
+            ingredients.push(i.toLowerCase());  // Collect ingredients from each recipe and convert to lowercase
+        });*/
+
         this.ingredients = [...new Set(ingredients)];  // Remove duplicates by creating a Set
-        this.populateDropdowns();  // Update dropdowns with the extracted ingredients
+        if (this.selectedIngredients.length) {
+            this.ingredients = this.ingredients.filter(item => !this.selectedIngredients.includes(item))
+        }
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
         console.log("ingredients", this.ingredients);
     }
 
     // Populates all dropdowns (ingredients, appliances, utensils) with the relevant items
-    populateDropdowns() {
-        this.populateDropdown('ingredients_list_selectable', this.ingredients, this.handleIngredientSelection.bind(this));  // Populate ingredients dropdown
-        this.populateDropdown('appliance_list_selectable', this.appliance, this.handleApplianceSelection.bind(this));  // Populate appliances dropdown
-        this.populateDropdown('ustensils_list_selectable', this.ustensiles, this.handleUstensileSelection.bind(this));  // Populate utensils dropdown
+    populateDropdowns(ingredients, appliance, ustensiles) {
+        this.populateDropdown('ingredients_list_selectable', ingredients, 'ingredient');  // Populate ingredients dropdown
+        this.populateDropdown('appliance_list_selectable', appliance, 'appliance');  // Populate appliances dropdown
+        this.populateDropdown('ustensils_list_selectable', ustensiles, 'ustensil');  // Populate utensils dropdown
     }
 
     // Populates a specific dropdown list with items and attaches a click handler for item selection
-    populateDropdown(dropdownId, items, clickHandler) {
+    populateDropdown(dropdownId, items, type) {
         const list = document.getElementById(dropdownId);  // Get the dropdown list element
         list.innerHTML = '';  // Clear any existing items in the list
 
@@ -96,9 +115,7 @@ export class App {
             li.classList.add('list-group-item');
             list.appendChild(li);
 
-            li.addEventListener('click', () => {
-                clickHandler(item);  // Attach the click handler to each list item
-            });
+            li.addEventListener('click', () => this.handleSelection(type, item));
         });
     }
 
@@ -120,7 +137,7 @@ export class App {
 
         // Filter dropdown based on input for utensils
         ustensilsSearchInput.addEventListener('input', () => {
-            this.filterDropdown('ustensils_list_selectable', this.ustensiles, ustensilsSearchInput.value.toLowerCase());
+            this.filterDropdown('ustensils_list_selectable', this.ustensils, ustensilsSearchInput.value.toLowerCase());
         });
     }
 
@@ -148,6 +165,17 @@ export class App {
         });
     }
 
+    // Handles selection (ingredients, appliances, or utensils) and updates the filters
+    handleSelection = (type, item) => {
+        if (type === 'ingredient') {
+            this.handleIngredientSelection(item);
+        } else if (type === 'appliance') {
+            this.handleApplianceSelection(item);
+        } else if (type === 'ustensil') {
+            this.handleUstensileSelection(item);
+        }
+    }
+
     // Handles ingredient selection and updates the filters
     handleIngredientSelection(ingredient) {
         if (this.selectedIngredients.includes(ingredient)) {
@@ -157,8 +185,8 @@ export class App {
         }
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
-        this.ingredients = this.ingredients.filter(i => i !== ingredient);  // Remove selected ingredient from the dropdown
-        this.populateDropdowns();  // Repopulate dropdowns after update
+        this.ingredients = this.ingredients.filter(item => !this.selectedIngredients.includes(item)); // Remove selected ingredient from the dropdown
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
     }
 
     // Handles appliance selection and updates the filters
@@ -170,8 +198,8 @@ export class App {
         }
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
-        this.appliance = this.appliance.filter(i => i !== appliance);  // Remove selected appliance from the dropdown
-        this.populateDropdowns();  // Repopulate dropdowns after update
+        this.appliance = this.appliance.filter(item => !this.selectedAppliances.includes(item)); // Remove selected appliance from the dropdown
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
     }
 
     // Handles utensil selection and updates the filters
@@ -183,100 +211,110 @@ export class App {
         }
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
-        this.ustensiles = this.ustensiles.filter(i => i !== ustensil);  // Remove selected utensil from the dropdown
-        this.populateDropdowns();  // Repopulate dropdowns after update
+        this.ustensils = this.ustensils.filter(item => !this.selectedUstensiles.includes(item));  // Remove selected utensil from the dropdown
+        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
     }
 
 
     // Updates the display of the currently selected filters
     updateFilterDisplay() {
-    const ingredientFilters = document.getElementById('ingredient-filters');
-    const applianceFilters = document.getElementById('appliance-filters');
-    const ustensilesFilters = document.getElementById('ustensiles-filters');
-    
-    // New container outside the dropdown
-    const selectedFiltersOutside = document.getElementById('selected-filters');
+        const ingredientFilters = document.getElementById('ingredient-filters');
+        const applianceFilters = document.getElementById('appliance-filters');
+        const ustensilesFilters = document.getElementById('ustensiles-filters');
 
-    // Clear both the dropdown filters and the outside filter container
-    ingredientFilters.innerHTML = '';
-    applianceFilters.innerHTML = '';
-    ustensilesFilters.innerHTML = '';
-    selectedFiltersOutside.innerHTML = ''; // Clear the outside container
+        // New container outside the dropdown
+        const selectedFiltersOutside = document.getElementById('selected-filters');
 
-    // Add selected ingredients to both the dropdown and the outside div
-    this.selectedIngredients.forEach(ingredient => {
-        this.createFilterElement('ingredient', ingredient, ingredientFilters, selectedFiltersOutside);
-    });
+        // Clear both the dropdown filters and the outside filter container
+        ingredientFilters.innerHTML = '';
+        applianceFilters.innerHTML = '';
+        ustensilesFilters.innerHTML = '';
+        selectedFiltersOutside.innerHTML = ''; // Clear the outside container
 
-    // Add selected appliances to both the dropdown and the outside div
-    this.selectedAppliances.forEach(appliance => {
-        this.createFilterElement('appliance', appliance, applianceFilters, selectedFiltersOutside);
-    });
+        // Add selected ingredients to both the dropdown and the outside div
+        this.selectedIngredients.forEach(ingredient => {
+            this.createFilters('ingredient', ingredient, ingredientFilters, selectedFiltersOutside);
+        });
 
-    // Add selected utensils to both the dropdown and the outside div
-    this.selectedUstensiles.forEach(ustensil => {
-        this.createFilterElement('ustensil', ustensil, ustensilesFilters, selectedFiltersOutside);
-    });
+        // Add selected appliances to both the dropdown and the outside div
+        this.selectedAppliances.forEach(appliance => {
+            this.createFilters('appliance', appliance, applianceFilters, selectedFiltersOutside);
+        });
 
-    // Update recipe count if necessary
-    this.updateRecipeCount();
-}
+        // Add selected utensils to both the dropdown and the outside div
+        this.selectedUstensiles.forEach(ustensil => {
+            this.createFilters('ustensil', ustensil, ustensilesFilters, selectedFiltersOutside);
+        });
+
+        // Update recipe count if necessary
+        this.updateRecipeCount();
+    }
 
 
-    createFilterElement(type, value, dropdownContainer, outsideContainer) {
-    // Create the filter element for the dropdown
-    const filterElementDropdown = document.createElement('div');
-    filterElementDropdown.className = 'filter-badge';
-    filterElementDropdown.innerHTML = `
+    //Create drop-down and outside filters
+    createFilters(type, value, dropdownContainer, outsideContainer) {
+        this.createFilter(value, type, dropdownContainer);
+        this.createFilter(value, type, outsideContainer);
+    }
+
+
+    // Create filter element
+    createFilter(value, type, dropdownContainer) {
+        // Create the filter element for the dropdown
+        const filterElement = document.createElement('div');
+        filterElement.className = 'filter-badge';
+        filterElement.innerHTML = `
         ${value}
         <button class="remove-filter" data-type="${type}" data-value="${value}">x</button>
     `;
-    dropdownContainer.appendChild(filterElementDropdown);  // Append to dropdown container
+        dropdownContainer.appendChild(filterElement);  // Append to dropdown container
+        // Attach remove listener for both dropdown and outside filter elements
+        filterElement.querySelector('.remove-filter').addEventListener('click', this.removeFilter());
 
-    // Create the filter element for the outside container
-    const filterElementOutside = document.createElement('div');
-    filterElementOutside.className = 'filter-badge';
-    filterElementOutside.innerHTML = `
-        ${value}
-        <button class="remove-filter" data-type="${type}" data-value="${value}">x</button>
-    `;
-    outsideContainer.appendChild(filterElementOutside);  // Append to outside container
+    }
 
-    // Add event listener to remove the filter for both containers
-    const removeFilter = (event) => {
-        const type = event.target.getAttribute('data-type');
-        const value = event.target.getAttribute('data-value');
+    removeFilter() {
+        // Add event listener to remove the filter for both containers
+        return (event) => {
+            const type = event.target.getAttribute('data-type');
+            const value = event.target.getAttribute('data-value');
 
-        if (type === 'ingredient') {
-            this.selectedIngredients = this.selectedIngredients.filter(i => i !== value);
-        } else if (type === 'appliance') {
-            this.selectedAppliances = this.selectedAppliances.filter(a => a !== value);
-        } else if (type === 'ustensil') {
-            this.selectedUstensiles = this.selectedUstensiles.filter(u => u !== value);
-        }
+            if (type === 'ingredient') {
+                this.selectedIngredients = this.selectedIngredients.filter(i => i !== value);
+            } else if (type === 'appliance') {
+                this.selectedAppliances = this.selectedAppliances.filter(a => a !== value);
+            } else if (type === 'ustensil') {
+                this.selectedUstensiles = this.selectedUstensiles.filter(u => u !== value);
+            }
 
-        // Update the filter display and apply the filters after removing
-        this.updateFilterDisplay();
-        this.applyFilters();
-    };
-
-    // Attach remove listener for both dropdown and outside filter elements
-    filterElementDropdown.querySelector('.remove-filter').addEventListener('click', removeFilter);
-    filterElementOutside.querySelector('.remove-filter').addEventListener('click', removeFilter);
-}
-
+            // Update the filter display and apply the filters after removing
+            this.updateFilterDisplay();
+            this.applyFilters();
+        };
+    }
 
     // Applies the filters to the recipe list and updates the displayed recipes
     applyFilters() {
+        this.matchFilters();
+        this.haveFilter = this.selectedIngredients.length > 0 || this.selectedAppliances.length > 0 || this.selectedUstensiles.length > 0;
+        this.updateIngredients(this.filteredRecipes)//Update dropdown list for ingredients
+        this.updateAppliance(this.filteredRecipes)//Update dropdown list for appliance
+        this.updateUstensiles(this.filteredRecipes)//Update dropdown list for utensils
+        this.displayRecipes();
+    }
+
+    //Get filtered list of recepies according to selected filters
+    matchFilters() {
         this.filteredRecipes = this.allRecipes.filter(recipe => {
+            //Check if any filter selected for ingredients
             const matchesIngredients = this.selectedIngredients.length === 0 ||
                 this.selectedIngredients.every(ingredient =>
                     recipe.ingredients.some(i => i.ingredient.toLowerCase() === ingredient.toLowerCase())
                 );
-
+            //Check if any filter selected for appliance
             const matchesAppliances = this.selectedAppliances.length === 0 ||
-                this.selectedAppliances.includes(recipe.appliance);
-
+                this.selectedAppliances.includes(recipe.appliance.toLowerCase());
+            //Check if any filter selected for ustensils
             const matchesUstensiles = this.selectedUstensiles.length === 0 ||
                 this.selectedUstensiles.every(ustensil =>
                     recipe.ustensils.some(u => u.toLowerCase() === ustensil.toLowerCase())
@@ -284,15 +322,9 @@ export class App {
 
             return matchesIngredients && matchesAppliances && matchesUstensiles;
         });
-
-        this.haveFilter = this.selectedIngredients.length > 0 || this.selectedAppliances.length > 0 || this.selectedUstensiles.length > 0;
-        this.getIngredients(this.filteredRecipes)//Update dropdown list for ingredients
-        this.getAppliance(this.filteredRecipes)//Update dropdown list for appliance
-        this.getUstensiles(this.filteredRecipes)//Update dropdown list for utensils
-        this.displayRecipes();
     }
 
-    // Update recipe counter
+// Update recipe counter
     updateRecipeCount(recepiesSize) {
         const recipeCountElement = document.getElementById('recipe-count');
         recipeCountElement.textContent = `${recepiesSize} recettes`;
