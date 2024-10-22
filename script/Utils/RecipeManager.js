@@ -1,3 +1,4 @@
+/*
 import { RecipeRenderer } from './Templates/RecipeRenderer.js';
 
 export class RecipeManager {
@@ -23,3 +24,4 @@ export class RecipeManager {
         recipeCountElement.textContent = `${count} recipes`;
     }
 }
+*/

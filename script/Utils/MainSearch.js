@@ -54,3 +54,4 @@ export class MainSearch {
         // display the recipes that match the search text
     }
 }
+

@@ -1,6 +1,8 @@
 import {DataFetcher} from './Api/dataFetcher.js';
 import {RecipeRenderer} from './Templates/RecipeRenderer.js';
 import {MainSearch} from './Utils/MainSearch.js';
+import {DropdownManager} from './Utils/DropdownManager.js';
+
 
 export class App {
     constructor() {
@@ -14,21 +16,21 @@ export class App {
         this.selectedIngredients = [];  // Selected ingredients for filtering
         this.selectedAppliances = [];  // Selected appliances for filtering
         this.selectedUstensiles = [];  // Selected utensils for filtering
+        this.dropdownManager = new DropdownManager(this);
     }
 
     // Initializes the app by fetching data, setting up filters, and displaying recipes
     async init() {
         await this.getAllRecipes();  // Wait for recipes to be fetched
-        this.updateIngredients(this.allRecipes);  // Extract ingredients from recipes
-        this.updateAppliance(this.allRecipes);  // Extract appliances from recipes
-        this.updateUstensiles(this.allRecipes);  // Extract utensils from recipes
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Populate dropdowns with the fetched data
+        this.dropdownManager.updateIngredients(this.allRecipes);  // Extract ingredients from recipes
+        this.dropdownManager.updateAppliance(this.allRecipes);  // Extract appliances from recipes
+        this.dropdownManager.updateUstensiles(this.allRecipes);  // Extract utensils from recipes
+        this.dropdownManager.populateDropdowns();  // Populate dropdowns with the fetched data
         this.setupSearchInputs();  // Set up the search functionality for dropdowns
         this.displayRecipes();  // Display all recipes initially
 
         const recipeFilter = new MainSearch(this);  // Create a MainSearch instance to handle searching
         recipeFilter.init();  // Initialize search functionalities
-
     }
 
     // Fetches all recipes from the data source
@@ -42,82 +44,6 @@ export class App {
     }
 
 
-    // Extracts unique appliances from the fetched recipes or update appliance with filters
-    updateAppliance(recepies) {
-        let appliances = [];
-
-        // Collect appliance from each recipe and convert to lowercase
-        recepies.forEach(recepie => {
-            appliances.push(recepie.appliance.toLowerCase())
-        })
-
-        this.appliance = [...new Set(appliances)];  // Remove duplicates by creating a Set
-        if (this.selectedAppliances.length) {
-            this.appliance = this.appliance.filter(item => !this.selectedAppliances.includes(item))
-        }
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
-        console.log("appliance", this.appliance);
-    }
-
-    // Extracts unique ustensils from the fetched recipes or update ustensils with filters
-    updateUstensiles(recepies) {
-        let ustensiles = [];
-
-        // Collect ustensils from each recipe and convert to lowercase
-        recepies.forEach(recepie => recepie.ustensils.forEach(ustensile => {
-            ustensiles.push(ustensile.toLowerCase());
-        }))
-
-        this.ustensils = [...new Set(ustensiles)];  // Remove duplicates by creating a Set
-        if (this.selectedUstensiles.length) {
-            this.ustensils = this.ustensils.filter(item => !this.selectedUstensiles.includes(item))
-        }
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
-        console.log("ustensiles", this.ustensils);
-    }
-
-    // Extracts unique ingredients from the fetched recipes or update ingredients with filters
-    updateIngredients(recepies) {
-        let ingredients = [];
-
-        // Collect ingredients from each recipe and convert to lowercase
-        recepies.forEach(recepie => recepie.ingredients.forEach(ingredient => {
-            ingredients.push(ingredient.ingredient.toLowerCase());
-        }))
-
-        /*ingredientList.forEach(i => {
-            ingredients.push(i.toLowerCase());  // Collect ingredients from each recipe and convert to lowercase
-        });*/
-
-        this.ingredients = [...new Set(ingredients)];  // Remove duplicates by creating a Set
-        if (this.selectedIngredients.length) {
-            this.ingredients = this.ingredients.filter(item => !this.selectedIngredients.includes(item))
-        }
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Update dropdowns with the extracted ingredients
-        console.log("ingredients", this.ingredients);
-    }
-
-    // Populates all dropdowns (ingredients, appliances, utensils) with the relevant items
-    populateDropdowns(ingredients, appliance, ustensiles) {
-        this.populateDropdown('ingredients_list_selectable', ingredients, 'ingredient');  // Populate ingredients dropdown
-        this.populateDropdown('appliance_list_selectable', appliance, 'appliance');  // Populate appliances dropdown
-        this.populateDropdown('ustensils_list_selectable', ustensiles, 'ustensil');  // Populate utensils dropdown
-    }
-
-    // Populates a specific dropdown list with items and attaches a click handler for item selection
-    populateDropdown(dropdownId, items, type) {
-        const list = document.getElementById(dropdownId);  // Get the dropdown list element
-        list.innerHTML = '';  // Clear any existing items in the list
-
-        items.forEach(item => {
-            let li = document.createElement('li');  // Create a new list item for each item
-            li.textContent = item;
-            li.classList.add('list-group-item');
-            list.appendChild(li);
-
-            li.addEventListener('click', () => this.handleSelection(type, item));
-        });
-    }
 
     // Sets up search functionality for each dropdown (ingredients, appliances, utensils)
     setupSearchInputs() {
@@ -186,7 +112,7 @@ export class App {
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
         this.ingredients = this.ingredients.filter(item => !this.selectedIngredients.includes(item)); // Remove selected ingredient from the dropdown
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
+        this.dropdownManager.populateDropdowns();  // Repopulate dropdowns after update
     }
 
     // Handles appliance selection and updates the filters
@@ -199,7 +125,7 @@ export class App {
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
         this.appliance = this.appliance.filter(item => !this.selectedAppliances.includes(item)); // Remove selected appliance from the dropdown
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
+        this.dropdownManager.populateDropdowns();  // Repopulate dropdowns after update
     }
 
     // Handles utensil selection and updates the filters
@@ -212,7 +138,7 @@ export class App {
         this.updateFilterDisplay();  // Update filter display after changes
         this.applyFilters();  // Apply the filters to the recipes
         this.ustensils = this.ustensils.filter(item => !this.selectedUstensiles.includes(item));  // Remove selected utensil from the dropdown
-        this.populateDropdowns(this.ingredients, this.appliance, this.ustensils);  // Repopulate dropdowns after update
+        this.dropdownManager.populateDropdowns();  // Repopulate dropdowns after update
     }
 
 
@@ -297,9 +223,9 @@ export class App {
     applyFilters() {
         this.matchFilters();
         this.haveFilter = this.selectedIngredients.length > 0 || this.selectedAppliances.length > 0 || this.selectedUstensiles.length > 0;
-        this.updateIngredients(this.filteredRecipes)//Update dropdown list for ingredients
-        this.updateAppliance(this.filteredRecipes)//Update dropdown list for appliance
-        this.updateUstensiles(this.filteredRecipes)//Update dropdown list for utensils
+        this.dropdownManager.updateIngredients(this.filteredRecipes)//Update dropdown list for ingredients
+        this.dropdownManager.updateAppliance(this.filteredRecipes)//Update dropdown list for appliance
+        this.dropdownManager.updateUstensiles(this.filteredRecipes)//Update dropdown list for utensils
         this.displayRecipes();
     }
 

@@ -1,3 +1,4 @@
+/*
 import { IngredientDropdown } from './IngredientDropdown.js';
 import { ApplianceDropdown } from './ApplianceDropdown.js';
 import { UstensilDropdown } from './UstensilDropdown.js';
@@ -31,3 +32,5 @@ export class DropdownHandler {
         this.ustensilDropdown.update(filteredRecipes);
     }
 }
+
+*/
