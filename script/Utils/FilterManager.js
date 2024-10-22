@@ -25,7 +25,7 @@ export class FilterManager {
             this.app.selectedIngredients.push(ingredient);
         }
         this.updateFilterDisplay();
-        this.app.applyFilters();
+        this.applyFilters();
     }
 
     handleApplianceSelection(appliance) {
@@ -35,7 +35,7 @@ export class FilterManager {
             this.app.selectedAppliances.push(appliance);
         }
         this.updateFilterDisplay();
-        this.app.applyFilters();
+        this.applyFilters();
     }
 
     handleUstensileSelection(ustensil) {
@@ -45,7 +45,7 @@ export class FilterManager {
             this.app.selectedUstensiles.push(ustensil);
         }
         this.updateFilterDisplay();
-        this.app.applyFilters();
+        this.applyFilters();
     }
 
     updateFilterDisplay() {
@@ -96,6 +96,33 @@ export class FilterManager {
             this.app.selectedUstensiles = this.app.selectedUstensiles.filter(u => u !== value);
         }
         this.updateFilterDisplay();
-        this.app.applyFilters();
+        this.applyFilters();
     }
+
+    applyFilters() {
+        this.matchFilters();
+        this.app.haveFilter = this.app.selectedIngredients.length > 0 || this.app.selectedAppliances.length > 0 || this.app.selectedUstensiles.length > 0;
+        this.app.dropdownManager.updateIngredients(this.app.filteredRecipes);
+        this.app.dropdownManager.updateAppliance(this.app.filteredRecipes);
+        this.app.dropdownManager.updateUstensiles(this.app.filteredRecipes);
+        this.app.displayRecipes();
+    }
+
+    matchFilters() {
+        this.app.filteredRecipes = this.app.allRecipes.filter(recipe => {
+            const matchesIngredients = this.app.selectedIngredients.length === 0 ||
+                this.app.selectedIngredients.every(ingredient =>
+                    recipe.ingredients.some(i => i.ingredient.toLowerCase() === ingredient.toLowerCase())
+                );
+            const matchesAppliances = this.app.selectedAppliances.length === 0 ||
+                this.app.selectedAppliances.includes(recipe.appliance.toLowerCase());
+            const matchesUstensiles = this.app.selectedUstensiles.length === 0 ||
+                this.app.selectedUstensiles.every(ustensil =>
+                    recipe.ustensils.some(u => u.toLowerCase() === ustensil.toLowerCase())
+                );
+
+            return matchesIngredients && matchesAppliances && matchesUstensiles;
+        });
+    }
+
 }

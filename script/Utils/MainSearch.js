@@ -20,7 +20,8 @@ export class MainSearch {
             // if the search text is not found, return
             if (!searchText) return;
             // filter the recipes
-            this.filterRecipes(searchText);
+            /* this.filterRecipesWithLoops(searchText); */
+            this.filterRecipesWithFunctional(searchText);
         });
     }
 
@@ -42,16 +43,38 @@ export class MainSearch {
         return searchText;
     }
 
-    filterRecipes(searchText) {
-        // filter the recipes
+    filterRecipesWithFunctional(searchText) {
+        // Use the filter method to create a new array of recipes that match the search text.
         this.app.filteredRecipes = this.app.allRecipes.filter(recipe =>
-            // check if the recipe name or description includes the search text
+            // Check if the recipe name or description includes the search text.
             recipe.name.toLowerCase().includes(searchText) ||
             recipe.description.toLowerCase().includes(searchText)
         );
-        this.app.displayRecipes();
         
-        // display the recipes that match the search text
+        this.app.displayRecipes(); // Display the filtered recipes.
     }
+
+    
+
+/*   filterRecipesWithLoops(searchText) {
+        const filteredRecipes = []; // Create an empty array to store filtered recipes.
+        
+        // Loop through all recipes using a for loop.
+        for (let i = 0; i < this.app.allRecipes.length; i++) {
+            const recipe = this.app.allRecipes[i]; // Get the current recipe.
+            
+            // Check if the recipe name or description includes the search text.
+            if (
+                recipe.name.toLowerCase().includes(searchText) ||
+                recipe.description.toLowerCase().includes(searchText)
+            ) {
+                filteredRecipes.push(recipe); // If it matches, add to the filteredRecipes array.
+            }
+        }
+    
+        this.app.filteredRecipes = filteredRecipes; // Update the filteredRecipes in the App.
+        this.app.displayRecipes(); // Display the filtered recipes.
+    } */
+    
 }
 
