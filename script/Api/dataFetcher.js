@@ -20,48 +20,5 @@ export class DataFetcher {
         return this.recipesData;
     }
     
-    extractIngredients(recipes) { 
-        const ingredientsSet = new Set();
-        recipes.forEach(recipe => {
-            if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
-                recipe.ingredients.forEach(ing => {
-                    if (ing.ingredient) {
-                        ingredientsSet.add(ing.ingredient.toLowerCase());
-                    } else {
-                        console.error('Ingredient data missing in:', ing);
-                    }
-                });
-            } else {
-                console.error('Ingredients field missing or not an array in recipe:', recipe);
-            }
-        });
-        console.log('Ingredients Set:', Array.from(ingredientsSet));
-        return Array.from(ingredientsSet);
-    }
-    
-    extractAppliances(recipes) {
-        const applianceSet = new Set();
-        recipes.forEach(recipe => {
-            // Check if the appliance field exists and is a string
-            if (recipe.appliance && typeof recipe.appliance === 'string') {
-                // Convert the appliance to lowercase and add to the set
-                applianceSet.add(recipe.appliance.toLowerCase());
-            } else {
-                // Log an error if the appliance field is missing or not a string
-                console.error('Appliance data missing or invalid in recipe:', recipe);
-            }
-        });
-        // Log the appliance set to see what has been added
-        console.log('Appliances Set:', Array.from(applianceSet));
-        return Array.from(applianceSet);
-    }
-    
-    extractUstensils(recipes) {
-        const ustensilsSet = new Set();
-        recipes.forEach(recipe => {
-            recipe.ustensils.forEach(ust => ustensilsSet.add(ust.toLowerCase()));
-        });
-        console.log('Ustensils Set:', Array.from(ustensilsSet));
-        return Array.from(ustensilsSet);
-    }
+
 }

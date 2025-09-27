@@ -2,6 +2,7 @@
 export class FilterManager {
     constructor(app) {
         this.app = app;
+        
     }
 
     handleSelection(type, item) {
@@ -101,7 +102,12 @@ export class FilterManager {
 
     applyFilters() {
         this.matchFilters();
-        this.app.haveFilter = this.app.selectedIngredients.length > 0 || this.app.selectedAppliances.length > 0 || this.app.selectedUstensiles.length > 0;
+        this.app.haveFilter = (
+            (this.app.selectedIngredients.length > 0 ||
+            this.app.selectedAppliances.length > 0 ||
+            this.app.selectedUstensiles.length > 0) ||
+            (this.app.mainSearchText && this.app.mainSearchText.length >= 3)
+        );
         this.app.dropdownManager.updateIngredients(this.app.filteredRecipes);
         this.app.dropdownManager.updateAppliance(this.app.filteredRecipes);
         this.app.dropdownManager.updateUstensiles(this.app.filteredRecipes);
@@ -109,9 +115,16 @@ export class FilterManager {
     }
 
     matchFilters() {
+        const searchText = this.app.mainSearchText || '';
         this.app.filteredRecipes = this.app.allRecipes.filter(recipe => {
+            // Main search
+            const matchesMainSearch = searchText.length < 3 ||
+                recipe.name.toLowerCase().includes(searchText) ||
+                recipe.description.toLowerCase().includes(searchText) ||
+                recipe.ingredients.some(ing => ing.ingredient.toLowerCase().includes(searchText));
+            // Filters
             const matchesIngredients = this.app.selectedIngredients.length === 0 ||
-                this.app.selectedIngredients.every(ingredient =>
+                this.app.selectedIngredients.every(ingredient =>    
                     recipe.ingredients.some(i => i.ingredient.toLowerCase() === ingredient.toLowerCase())
                 );
             const matchesAppliances = this.app.selectedAppliances.length === 0 ||
@@ -120,9 +133,7 @@ export class FilterManager {
                 this.app.selectedUstensiles.every(ustensil =>
                     recipe.ustensils.some(u => u.toLowerCase() === ustensil.toLowerCase())
                 );
-
-            return matchesIngredients && matchesAppliances && matchesUstensiles;
+            return matchesMainSearch && matchesIngredients && matchesAppliances && matchesUstensiles;
         });
     }
-
-}
+}   

@@ -6,26 +6,20 @@ export class MainSearch {
     }
 
     init() {
-        // get the search bar element
         const searchBar = document.getElementById('searchbar'); 
-        // if the search bar element is not found, return
         if (!searchBar) {
             console.error('Search bar element was not found.');
             return;
         }
-        // add an event listener to the search bar element
         searchBar.addEventListener('keyup', (e) => {
-            // get the search text
-            const searchText = this.checkSearchText(e);
-            // if the search text is not found, return
-            if (!searchText) return;
-            // filter the recipes
-            /* this.filterRecipesWithLoops(searchText); */
-            this.filterRecipesWithFunctional(searchText);
+            const searchText = e.target.value.toLowerCase().trim();
+            this.app.mainSearchText = searchText;
+            this.app.filterManager.applyFilters(); // Always apply unified filters
         });
     }
 
     checkSearchText(e) {
+        
         // get the search text
         const searchText = e.target.value.toLowerCase().trim();
         // if the search text is less than 3 characters, return
@@ -48,7 +42,9 @@ export class MainSearch {
         this.app.filteredRecipes = this.app.allRecipes.filter(recipe =>
             // Check if the recipe name or description includes the search text.
             recipe.name.toLowerCase().includes(searchText) ||
-            recipe.description.toLowerCase().includes(searchText)
+            recipe.description.toLowerCase().includes(searchText) ||
+            recipe.ingredients.some(ing => ing.ingredient.toLowerCase().includes(searchText.toLowerCase()))
+
         );
         
         this.app.displayRecipes(); // Display the filtered recipes.

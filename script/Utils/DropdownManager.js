@@ -24,7 +24,8 @@ export class DropdownManager {
 
     updateIngredients(recipes) {
         let ingredients = [];
-        recipes.forEach(recipe => recipe.ingredients.forEach(ingredient => ingredients.push(ingredient.ingredient.toLowerCase())));
+        recipes.forEach(recipe => recipe.ingredients.forEach(ingredient => ingredients.push(ingredient.ingredient.toLowerCase().toLowerCase())));
+        // Remove duplicates and filter out selected ingredients);
         this.app.ingredients = [...new Set(ingredients)];
         if (this.app.selectedIngredients.length) {
             this.app.ingredients = this.app.ingredients.filter(item => !this.app.selectedIngredients.includes(item));

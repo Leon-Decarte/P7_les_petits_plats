@@ -7,6 +7,9 @@ import { SearchManager } from './Utils/SearchManager.js';
 
 export class App {
     constructor() {
+        
+        // Initialize variables
+
         this.allRecipes = null;  
         this.filteredRecipes = null;  
         this.haveFilter = false;  
@@ -60,12 +63,10 @@ export class App {
             } else {
                 recipeRenderer.renderRecipes(this.filteredRecipes);
                 this.updateRecipeCount(this.filteredRecipes.length);
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH");
             }
         } else {
             recipeRenderer.renderRecipes(this.allRecipes);
             this.updateRecipeCount(this.allRecipes.length);
-            console.log("azgdu")
         }
     }
 
