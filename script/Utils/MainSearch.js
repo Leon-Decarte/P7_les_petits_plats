@@ -31,7 +31,7 @@ export class MainSearch {
         return searchText;
     }
 
-    filterRecipesWithFunctional(searchText) {
+    /*filterRecipesWithFunctional(searchText) {
         // Use the filter method to create a new array of recipes that match the search text.
         this.app.filteredRecipes = this.app.allRecipes.filter(recipe =>
             // Check if the recipe name or description includes the search text.
@@ -42,11 +42,11 @@ export class MainSearch {
         );
         
         this.app.displayRecipes(); // Display the filtered recipes.
-    }
+    }*/
 
     
 
-/*   filterRecipesWithLoops(searchText) {
+    filterRecipesWithLoops(searchText) {
         const filteredRecipes = []; // Create an empty array to store filtered recipes.
         
         // Loop through all recipes using a for loop.
@@ -64,7 +64,7 @@ export class MainSearch {
     
         this.app.filteredRecipes = filteredRecipes; // Update the filteredRecipes in the App.
         this.app.displayRecipes(); // Display the filtered recipes.
-    } */
+    }   
     
 }
 
