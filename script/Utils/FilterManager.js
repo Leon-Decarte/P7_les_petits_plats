@@ -2,7 +2,7 @@
 export class FilterManager {
     constructor(app) {
         this.app = app;
-        
+
     }
 
     handleSelection(type, item) {
@@ -21,13 +21,16 @@ export class FilterManager {
 
     handleIngredientSelection(ingredient) {
         if (this.app.selectedIngredients.includes(ingredient)) {
+            // si déjà sélectionné, on le retire
             this.app.selectedIngredients = this.app.selectedIngredients.filter(i => i !== ingredient);
         } else {
+            // sinon on l’ajoute
             this.app.selectedIngredients.push(ingredient);
         }
-        this.updateFilterDisplay();
-        this.applyFilters();
+        this.updateFilterDisplay();  // affiche les badges
+        this.applyFilters();         // relance le filtrage
     }
+
 
     handleApplianceSelection(appliance) {
         if (this.app.selectedAppliances.includes(appliance)) {
@@ -48,6 +51,8 @@ export class FilterManager {
         this.updateFilterDisplay();
         this.applyFilters();
     }
+
+    // Add or remove filter badges in both dropdowns and outside
 
     updateFilterDisplay() {
         const ingredientFilters = document.getElementById('ingredient-filters');
@@ -102,10 +107,12 @@ export class FilterManager {
 
     applyFilters() {
         this.matchFilters();
+        // Determine if any filter is applied
         this.app.haveFilter = (
+            // at least one filter is applied or main search text is valid
             (this.app.selectedIngredients.length > 0 ||
-            this.app.selectedAppliances.length > 0 ||
-            this.app.selectedUstensiles.length > 0) ||
+                this.app.selectedAppliances.length > 0 ||
+                this.app.selectedUstensiles.length > 0) ||
             (this.app.mainSearchText && this.app.mainSearchText.length >= 3)
         );
         this.app.dropdownManager.updateIngredients(this.app.filteredRecipes);
@@ -119,12 +126,13 @@ export class FilterManager {
         this.app.filteredRecipes = this.app.allRecipes.filter(recipe => {
             // Main search
             const matchesMainSearch = searchText.length < 3 ||
+                // the main search text is found in name, description, or ingredients
                 recipe.name.toLowerCase().includes(searchText) ||
                 recipe.description.toLowerCase().includes(searchText) ||
                 recipe.ingredients.some(ing => ing.ingredient.toLowerCase().includes(searchText));
             // Filters
             const matchesIngredients = this.app.selectedIngredients.length === 0 ||
-                this.app.selectedIngredients.every(ingredient =>    
+                this.app.selectedIngredients.every(ingredient =>
                     recipe.ingredients.some(i => i.ingredient.toLowerCase() === ingredient.toLowerCase())
                 );
             const matchesAppliances = this.app.selectedAppliances.length === 0 ||

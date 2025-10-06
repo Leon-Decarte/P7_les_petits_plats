@@ -46,7 +46,7 @@ export class App {
         try {
             this.allRecipes = await dataFetcher.fetchData();  
         } catch (error) {
-            console.error('Error fetching recipes:', error);  
+            console.error(' Error fetching recipes:', error);  
         }
     }
 
@@ -58,13 +58,17 @@ export class App {
         
 
         if (this.haveFilter) {
+            //if a filter is applied
             if (!this.filteredRecipes || this.filteredRecipes.length === 0) {
+                // if no recipes match the filter criteria show a message
                 container.innerHTML = '<p>No recipes found.</p>';
             } else {
+                // render the filtered recipes
                 recipeRenderer.renderRecipes(this.filteredRecipes);
                 this.updateRecipeCount(this.filteredRecipes.length);
             }
         } else {
+            // render all recipes
             recipeRenderer.renderRecipes(this.allRecipes);
             this.updateRecipeCount(this.allRecipes.length);
         }

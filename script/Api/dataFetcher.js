@@ -7,15 +7,11 @@ export class DataFetcher {
 
     async fetchData() { 
         try {
-            // fetch the data from the recipes.json file
             const response = await fetch('data/recipes.json');
-            // convert the response to a json object
             this.recipesData = await response.json();
-            // log the recipes data
-            console.log('Recipes data fetched successfully:', this.recipesData);
-        
+            console.log('dataFectech > fetchData :  Recipes data fetched successfully:', this.recipesData);
         } catch (error) {
-            console.error('Error fetching the recipes:', error);
+            console.error('dataFectech > fetchData : Error fetching the recipes:', error);
         }
         return this.recipesData;
     }

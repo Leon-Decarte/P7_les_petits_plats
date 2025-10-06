@@ -11,21 +11,22 @@ export class RecipeRenderer {
     }
 
     renderRecipes(data) {
-        // if the container element is not found, return
-        if (!this.container) {
-            return;
-        }
+        try {
+            // if the container element is not found, return
+            if (!this.container) {
+                return;
+            }
 
-        // Clear existing content
-        this.container.innerHTML = '';
+            // Clear existing content
+            this.container.innerHTML = '';
 
-        data.forEach(recipe => {    
-            // create a recipe element
-            const recipeElement = document.createElement('div');
-            // add a class to the recipe element
-            recipeElement.className = 'card';  // Add class to the recipe container
+            data.forEach(recipe => {
+                // create a recipe element
+                const recipeElement = document.createElement('div');
+                // add a class to the recipe element
+                recipeElement.className = 'card';  // Add class to the recipe container
 
-            recipeElement.innerHTML = `
+                recipeElement.innerHTML = `
                 <img src="./assets/photos/${recipe.image}">
                 <div class="timer-badge">${recipe.time} min</div>
                 <div class="card__information">
@@ -40,7 +41,11 @@ export class RecipeRenderer {
                 
                 </div>
             `;
-            this.container.appendChild(recipeElement);
-        });
+                this.container.appendChild(recipeElement);
+            });
+
+        } catch (error) {
+            console.error('RecipeRenderer > renderRecipes : Error generale :', error);
+        }
     }
 }

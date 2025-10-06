@@ -2,10 +2,11 @@ export class DropdownManager {
     constructor(app) {
         this.app = app;
     }
-
+// Update the dropdown lists based on the current recipes and selected filters
     updateAppliance(recipes) {
         let appliances = recipes.map(recipe => recipe.appliance.toLowerCase());
         this.app.appliance = [...new Set(appliances)];
+        // Filter out selected appliances
         if (this.app.selectedAppliances.length) {
             this.app.appliance = this.app.appliance.filter(item => !this.app.selectedAppliances.includes(item));
         }
@@ -24,7 +25,7 @@ export class DropdownManager {
 
     updateIngredients(recipes) {
         let ingredients = [];
-        recipes.forEach(recipe => recipe.ingredients.forEach(ingredient => ingredients.push(ingredient.ingredient.toLowerCase().toLowerCase())));
+        recipes.forEach(recipe => recipe.ingredients.forEach(ingredient => ingredients.push(ingredient.ingredient.toLowerCase())));
         // Remove duplicates and filter out selected ingredients);
         this.app.ingredients = [...new Set(ingredients)];
         if (this.app.selectedIngredients.length) {
@@ -32,13 +33,13 @@ export class DropdownManager {
         }
         this.populateDropdowns();
     }
-
+// Populate the dropdown lists in the UI
     populateDropdowns() {
         this.populateDropdown('ingredients_list_selectable', this.app.ingredients, 'ingredient');
         this.populateDropdown('appliance_list_selectable', this.app.appliance, 'appliance');
         this.populateDropdown('ustensils_list_selectable', this.app.ustensils, 'ustensil');
     }
-
+    
     populateDropdown(dropdownId, items, type) {
         const list = document.getElementById(dropdownId);
         list.innerHTML = '';
