@@ -44,7 +44,6 @@ export class MainSearch {
         this.app.displayRecipes(); // Display the filtered recipes.
     }
 
-    
 
 /*   filterRecipesWithLoops(searchText) {
         const filteredRecipes = []; // Create an empty array to store filtered recipes.
