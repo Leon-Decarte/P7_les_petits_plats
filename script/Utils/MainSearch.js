@@ -47,24 +47,39 @@ export class MainSearch {
     
 
     filterRecipesWithLoops(searchText) {
-        const filteredRecipes = []; // Create an empty array to store filtered recipes.
-        
-        // Loop through all recipes using a for loop.
-        for (let i = 0; i < this.app.allRecipes.length; i++) {
-            const recipe = this.app.allRecipes[i]; // Get the current recipe.
-            
-            // Check if the recipe name or description includes the search text.
-            if (
-                recipe.name.toLowerCase().includes(searchText) ||
-                recipe.description.toLowerCase().includes(searchText)
-            ) {
-                filteredRecipes.push(recipe); // If it matches, add to the filteredRecipes array.
+    const filteredRecipes = []; // Tableau qui contiendra les recettes filtrées.
+    
+    // Parcours de toutes les recettes
+    for (let i = 0; i < this.app.allRecipes.length; i++) {
+        const recipe = this.app.allRecipes[i];
+        const name = recipe.name.toLowerCase();
+        const description = recipe.description.toLowerCase();
+        const ingredients = recipe.ingredients;
+
+        let found = false;
+
+        // Vérifie dans le nom et la description
+        if (name.includes(searchText) || description.includes(searchText)) {
+            found = true;
+        } else {
+            // Vérifie dans les ingrédients avec une boucle native
+            for (let j = 0; j < ingredients.length; j++) {
+                const ing = ingredients[j].ingredient.toLowerCase();
+                if (ing.includes(searchText)) {
+                    found = true;
+                    break; // on peut s'arrêter dès qu'on trouve un match
+                }
             }
         }
-    
-        this.app.filteredRecipes = filteredRecipes; // Update the filteredRecipes in the App.
-        this.app.displayRecipes(); // Display the filtered recipes.
-    }   
-    
+
+        if (found) {
+            filteredRecipes.push(recipe);
+        }
+    }
+
+    this.app.filteredRecipes = filteredRecipes;
+    this.app.displayRecipes();
+}
+
 }
 
