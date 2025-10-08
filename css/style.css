@@ -133,6 +133,7 @@ main {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4; /* Number of lines to show */
+    line-clamp: 4;
     overflow: hidden;
     max-height: 100px; /* Set the max height */
 }
@@ -191,6 +192,7 @@ main .recipe-container {
     font-weight: 400;
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
